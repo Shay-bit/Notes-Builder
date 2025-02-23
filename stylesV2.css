@@ -1,0 +1,173 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+/* Main Layout */
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #FCF0CC; 
+}
+
+.main-container {
+    width: 90%;
+    height: 90%;
+    display: flex;
+    background-color: #BBDBB4; 
+    border-radius: 10px;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Sidebar (Stored Notes) */
+.stored-notes-container {
+    width: 25%;
+    height: 100%;
+    background-color: #D56AA0; 
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+#create-note-btn {
+    background-color: #A64253; 
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 80%;
+    font-size: 16px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+#create-note-btn:hover {
+    background-color: #861657; 
+}
+
+/* Stored Note Button */
+.stored-note {
+    background-color: #FCF0CC; 
+    width: 90%;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.stored-note:hover {
+    background-color: #BBDBB4; 
+}
+
+/* Notes Display */
+.current-note-container {
+    width: 75%;
+    height: 100%;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+/* Individual Note */
+.note {
+    background-color: white;
+    width: 90%;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.note-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #A64253; 
+    margin-bottom: 10px;
+}
+
+.note-info {
+    font-size: 14px;
+    color: #333;
+}
+
+/* Button Container */
+.btn-container {
+    display: flex;
+    justify-content: flex-end;  
+    gap: 5px; 
+    margin-top: 10px;
+}
+
+/* Smaller, Icon-Sized Buttons */
+.btn-container button {
+    background-color: #861657; 
+    color: white;
+    border: none;
+    padding: 6px; 
+    border-radius: 50%; 
+    cursor: pointer;
+    font-size: 12px; 
+    width: 30px; 
+    height: 30px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+}
+
+.btn-container button:hover {
+    background-color: #A64253; 
+}
+
+
+/* Add Note Input */
+.add-note-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #FCF0CC; 
+    width: 90%;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+.add-note-container input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #861657;
+    border-radius: 5px;
+}
+
+#add-save-note-btn {
+    background-color: #D56AA0; 
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+#add-save-note-btn:hover {
+    background-color: #A64253; 
+}
