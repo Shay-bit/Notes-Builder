@@ -1,175 +1,132 @@
 console.log("Welcome to Notes!")
 
-//DOM Elements
+// DOM Elements
 const createNoteBtn = document.querySelector("#create-note-btn")
-const currentNoteContainer = document.querySelector('.current-note-container')
+const currentNoteContainer = document.querySelector(".current-note-container")
 const storedNote = document.querySelector(".stored-note")
 
-let notes = []
+// Initialize notes as an empty array or retrieve from localStorage
+let notes = JSON.parse(localStorage.getItem("stored-notes")) || []
 
-// IMPORTANT IF YOU MESS UP LOCAL STORAGE //
-// ===================================== //
-// 1. Un-Comment below code and insert something into Storage
-// 2. Comment out renderNotes function
-
-// let notes = [
-//     {
-//         title: "JavaScript Notes",
-//         body: "Took a Intro Class today here are my notes."
-//     }
-// ]
-// localStorage.setItem("stored-notes", JSON.stringify(notes))
-// ===================================== //
-
-
-console.log("notes before Render:", notes)
-
+// Function to render notes
 function renderNotes() {
+    // Get notes from localStorage, ensuring it's an array
     let storedNotes = localStorage.getItem("stored-notes")
-    let parseNotes = JSON.parse(storedNotes)
-    notes = parseNotes
+    let parseNotes = storedNotes ? JSON.parse(storedNotes) : []
+    notes = Array.isArray(parseNotes) ? parseNotes : []
 
-    // Render in Notes Container
-    // ----- <>
+    // Clear the notes container before rendering
+    currentNoteContainer.innerHTML = ""
+
+    // Show a message if there are no notes
+    if (notes.length === 0) {
+        currentNoteContainer.innerHTML = "<p>No notes available. Create one!</p>"
+        return
+    }
+
+    // Render each note
     notes.forEach((note, index) => {
-        const renderNote = document.createElement('div')
-        renderNote.classList.add('note')
+        const renderNote = document.createElement("div")
+        renderNote.classList.add("note")
         renderNote.innerHTML = 
-        `
-        <div class="note">
-            <div class="note-title">${note.title}</div>
-            <div class="note-info-container">
-            <p class="note-info">${note.body}</p>
-            <div class="btn-container">
-                <button class="modify-btn">Modify</button>
-                <button class="save-btn">Save</button>
-                <button class="delete-btn">Delete</button>
-            </div>
-        </div>
-        `
+            `<div class="note">
+                <div class="note-title">${note.title}</div>
+                <div class="note-info-container">
+                    <p class="note-info">${note.body}</p>
+                    <div class="btn-container">
+                        <button class="modify-btn">Modify</button>
+                        <button class="delete-btn">Delete</button>
+                    </div>
+                </div>
+            </div>`
+        
         currentNoteContainer.append(renderNote)
-        // ----- <>
 
-        // Short Render is Left Container
-        // ----- <>
-        const renderShortNote = document.createElement('div')
-        renderShortNote.classList.add("stored-note")
-        renderShortNote.innerHTML = 
-        `<div class="stored-note-title">${note.title}</div>`
+        // Select buttons inside this note
+        const deleteBtn = renderNote.querySelector(".delete-btn")
+        deleteBtn.addEventListener("click", () => deleteNote(index))
 
-        storedNote.append(renderShortNote)
-        // ----- <>
+  const modifyBtn = renderNote.querySelector(".modify-btn")
+        modifyBtn.addEventListener("click", () => modifyNote(index))
+    })
+}
+// Function to add a new note
+function addNote() {
+    console.log("Create! Button Works!")
+    
+    // Create the note input fields
+    const createNote = document.createElement("div")
+    createNote.classList.add("note")
+    createNote.innerHTML = 
+        `<div class="add-note-container">
+            <input type="text" id="add-note-title" placeholder="Note Title">
+            <input type="text" id="add-note-body" placeholder="Your new note!">
+            <button id="add-save-note-btn">Save</button>
+        </div>`  
+    currentNoteContainer.append(createNote)
+// Handle saving the note
+    document.querySelector("#add-save-note-btn").addEventListener("click", () => {
+        const addNoteTitle = document.querySelector("#add-note-title").value
+        const addNoteBody = document.querySelector("#add-note-body").value
 
-        // Delete button
-        // ----- <>
-        const deleteBtn = document.querySelectorAll(".delete-btn")
-        deleteBtn.forEach((btn, index) => {
-            btn.addEventListener("click",() => deleteNote(index))
-        })
-        
-        // Modify Button
-        // ----- <>
-        const modifyBtn = document.querySelectorAll(".modify-btn")
-        modifyBtn.forEach((modBtn, index) => {
-            modBtn.addEventListener("click", () => modifyNote(index))
-        })
-        
+        // Ensure the user entered something
+        if (addNoteTitle.trim() && addNoteBody.trim()) {
+            notes.push({ title: addNoteTitle, body: addNoteBody })
+            localStorage.setItem("stored-notes", JSON.stringify(notes))
 
+            // Re-render the notes
+            currentNoteContainer.innerHTML = ""
+            renderNotes()
+        } else {
+            alert("Please enter a title and note content.")
+        }
+    })
+}
+// Event listener for "Create Note" button
+createNoteBtn.addEventListener("click", addNote)
+
+// Function to delete a note
+function deleteNote(index) {
+    console.log("Deleting note at index:", index)
+
+    // Remove note from array and update localStorage
+    notes.splice(index, 1)
+    localStorage.setItem("stored-notes", JSON.stringify(notes))
+
+    // Clear and re-render the notes
+    currentNoteContainer.innerHTML = ""
+    renderNotes()
+}
+
+// Function to modify an existing note
+function modifyNote(index) {
+    console.log("Modifying note:", notes[index])
+
+    // Create input fields pre-filled with existing note data
+    const createNote = document.createElement("div")
+    createNote.classList.add("note")
+    createNote.innerHTML = 
+        `<div class="add-note-container">
+            <input type="text" id="add-note-title" value="${notes[index].title}">
+            <input type="text" id="add-note-body" value="${notes[index].body}">
+            <button id="add-save-note-btn">Save</button>
+        </div>`
+    currentNoteContainer.append(createNote)
+// Handle saving the modified note
+    document.querySelector("#add-save-note-btn").addEventListener("click", () => {
+        notes[index] = {
+            title: document.querySelector("#add-note-title").value,
+            body: document.querySelector("#add-note-body").value
+        }
+
+        localStorage.setItem("stored-notes", JSON.stringify(notes))
+
+        // Clear and re-render notes
+        currentNoteContainer.innerHTML = ""
+        renderNotes()
     })
 }
 
-
-// Add A New Note //
-// ----- <>
-function addNote(){
-    console.log("Create! Button Works!")
-    const createNote = document.createElement('div')
-    createNote.classList.add('note')
-    createNote.innerHTML = 
-    `<div class="add-note-container">
-        <input type="text" id="add-note-title" placeholder="Note Title">
-        <input type="text" id="add-note-body" placeholder="Your new note!">
-        <button id="add-save-note-btn">Save</button>
-    </div>`  
-    currentNoteContainer.append(createNote)
-
-    // Save Button
-    // ----- <>
-    const addSaveNoteBtn = document.querySelector("#add-save-note-btn")
-
-    function saveNewNote(){
-        const addNoteTitle = document.querySelector("#add-note-title").value
-        const addNoteBody = document.querySelector("#add-note-body").value
-        notes.push({"title": addNoteTitle, "body": addNoteBody})
-        console.log("notes after add:", notes)
-
-        let sendNotesStorage = JSON.stringify(notes)
-        localStorage.setItem("stored-notes", sendNotesStorage)
-
-        currentNoteContainer.innerHTML= ""
-        storedNote.innerHTML = ""
-        renderNotes()
-    }   
-    addSaveNoteBtn.addEventListener("click", saveNewNote)   
-}
-createNoteBtn.addEventListener("click", addNote)
-// ----- <>
-
-// Function Delete Note!
-// ----- <>
-function deleteNote(index){
-    console.log(index)
-    console.log("before splice", notes)
-    notes.splice(index, 1)
-    console.log("after splice:", notes)
-    localStorage.setItem("stored-notes", JSON.stringify(notes))
-
-    currentNoteContainer.innerHTML= ""
-    storedNote.innerHTML = ""
-    
-    renderNotes()
-}
-// ----- <>
-
-// Function Modify Note!
-// ----- <>
-function modifyNote(index){
-    console.log(notes[index])
-
-    const createNote = document.createElement('div')
-    createNote.classList.add('note')
-
-    createNote.innerHTML = 
-    `<div class="add-note-container">
-        <input type="text" id="add-note-title" value="${notes[index].title}">
-        <input type="text" id="add-note-body" value="${notes[index].body}">
-        <button id="add-save-note-btn">Save</button>
-    </div>`  
-    currentNoteContainer.append(createNote)
-
-    const addSaveNoteBtn = document.querySelector("#add-save-note-btn")
-
-    function saveNewNote(){
-        notes.splice(index, 1)
-        const addNoteTitle = document.querySelector("#add-note-title").value
-        const addNoteBody = document.querySelector("#add-note-body").value
-        notes.push({"title": addNoteTitle, "body": addNoteBody})
-        console.log("notes after add:", notes)
-
-        let sendNotesStorage = JSON.stringify(notes)
-        localStorage.setItem("stored-notes", sendNotesStorage)
-      
-        currentNoteContainer.innerHTML= ""
-        storedNote.innerHTML = ""
-        renderNotes()
-    }   
-    addSaveNoteBtn.addEventListener("click", saveNewNote) 
-}
-
+// Initial render of notes when the page loads
 renderNotes()
-console.log("notes AFTER Render:", notes)
-
-// ========== //
-// GRAVEYARD //
-// ========== //
-
+console.log("Notes AFTER render:", notes)
